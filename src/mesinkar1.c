@@ -6,30 +6,24 @@
 #include "mesinkar1.h"
 
 /* definisi pita */
-static char Pita_karakter[63] = "pitakar.txt";
-static FILE * FILEKU;
-static int retval;
+char* pitaKar;
 
-void START(char* namafile){
+void START(const char* _pitaKar){
 /* I.S. sembarang */
 /* F.S. CC adalah karakter pertama pita */
 /*		Jika CC==MARK, EOP menyala (true) */
 /*		Jika CC!=MARK, EOP padam (false) */
-	if(namafile[0]=='-' && namafile[1]=='\0')
-		FILEKU = stdin;
-	else FILEKU = fopen(namafile,"r");
-	retval = fscanf(FILEKU,"%c",&CC);
+	pitaKar=_pitaKar;
+	CC=pitaKar[0];
+	mesinkar_i=0;
 }
 
 void ADV(void){
 /* I.S. CC!=MARK */
 /* F.S. CC adalah karakter berikutnya dari CC pada I.S. */
 /*		Jika CC==MARK, EOP menyala (true) */
-	retval = fscanf(FILEKU,"%c",&CC);
-	if(CC==MARK) {
-		if (FILEKU!=stdin)
-			fclose(FILEKU);
-	}
+	mesinkar_i++;
+	CC=pitaKar[mesinkar_i];
 }
 
 bool EOP(){

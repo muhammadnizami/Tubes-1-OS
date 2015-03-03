@@ -58,3 +58,43 @@ void printDir(char * dir){
 	}
 }
 
+char * homeDirToCurlyDash(char * dir, char * buf){
+//I.S. dir berisi path
+//F.S. dir disalin ke buf
+//	apabila bagian depan dir merupakan home directory,
+//	home directory disalin dengan ~
+	if (buf!=NULL){
+		char* homeDir = getHomeDir(NULL);
+		int a = strlen(homeDir);
+		if (!strncmp(homeDir,dir,a)){
+			sprintf(buf,"~");
+			strcat(buf,dir+a);
+		}else{
+			strcpy(buf,dir);
+		}
+	}else	{
+		static char tmp[1024];
+		return homeDirToCurlyDash(dir,tmp);
+	}
+}
+
+char * curlyDashToHomeDir(char * dir, char * buf){
+//I.S. dir berisi suatu path
+//F.S. jika buf == NULL, suatu variabel buffer yang statik akan berisi
+//		path yang ~ diganti dengan home directory, dan return
+//	jika buf != NULL, buf berisi dir yang ~ diganti home directory
+//		return buf
+	if (buf!=NULL){
+		if(dir[0]=='~'){
+			getHomeDir(buf);
+			strcat(buf,dir+1);
+			return buf;
+		}else{
+			strcpy(buf,dir);
+			return buf;
+		}
+	}else{
+		static char tmp[1024];
+		return curlyDashToHomeDir(dir,tmp);
+	}
+}

@@ -8,6 +8,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+//input
+#include <stdlib.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include "eksekusi.h"
 #include "cd.h"
@@ -18,18 +22,24 @@ extern "C"{
 
 #define MAX_ARGC 32
 
-void executeOneCommand(int pipeinfd);
+void executeOneCommand(const char * cmd, int pipeinfd);
 
 int main(){
 	while (true){
 		char curDir[1024];
-		printDir(getwd(curDir));
-		printf("$ ");
-		executeOneCommand(0);
+		char * input;
+
+		input=readline(strcat(homeDirToCurlyDash(getwd(curDir),NULL),"$ "));
+
+		executeOneCommand(input,0);
+
+		add_history(input);
+
+		free(input);
 	}
 }
 
-void executeOneCommand(int pipeinfd){
+void executeOneCommand(const char * cmd, int pipeinfd){
 	int pipingres = -1;
 	int pipesfd[2];
 
@@ -40,7 +50,7 @@ void executeOneCommand(int pipeinfd){
 	int argc=0;
 	if (status==stat_opr) ADVKATA();//dummy sementara.
 					//operator redirect dan pipeline belum dikerjakan
-	for (STARTKATA("-");!EndKata;ADVKATA()){
+	for (STARTKATA(cmd);!EndKata;ADVKATA()){
 		if ( status == stat_arg ){
 			argv[argc] = new char[CKata.Length+1];
 			StrFromKata(argv[argc],CKata);
@@ -65,7 +75,6 @@ void executeOneCommand(int pipeinfd){
 				StrFromKata(buf,CKata);
 				out = open(buf, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 			}else if (!strcmp(buf,"|")){
-				ADVKATA();
 				pipingres = pipe(pipesfd);
 				if (pipingres==-1)
 					printf("pipe failed\n");
@@ -76,11 +85,6 @@ void executeOneCommand(int pipeinfd){
 		}
 	}
 	argv[argc]=NULL;
-	printf ("executing");
-
-	for (int i=0;i<argc;i++)
-		printf(" %s",argv[i]);
-	printf("\n");
 
 	if (argc>0){
 		if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
@@ -89,6 +93,6 @@ void executeOneCommand(int pipeinfd){
 		}else	eksekusi(argv[0],argv,in,out);
 		//cleanup argv
 		for (int j=0;j<argc;j++) delete argv[j];
-		if (pipingres!=-1)executeOneCommand(pipesfd[0]);
+		if (pipingres!=-1)executeOneCommand(cmd+mesinkar_i,pipesfd[0]);
 	}
 }

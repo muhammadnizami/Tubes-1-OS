@@ -1,15 +1,16 @@
 #ifndef MESINKAR1_H
 #define MESINKAR1_H
 #ifndef MARK
-#define MARK '\n'
+#define MARK '\0'
 #endif
 
 #include <stdbool.h>
 
 /* definisi states */
 char CC;
+int mesinkar_i;
 
-void START(char* namafile);
+void START(const char* _pitaKar);
 /* I.S. sembarang */
 /* F.S. CC adalah karakter pertama pita */
 /*		Jika CC==MARK, EOP menyala (true) */

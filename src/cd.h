@@ -25,4 +25,17 @@ void printDir(char * dir);
 //	apabila bagian depan dir merupakan home directory,
 //	home directory ditampilkan dengan ~
 
+char * homeDirToCurlyDash(char * dir, char * buf);
+//I.S. dir berisi path
+//F.S. dir disalin ke buf
+//	apabila bagian depan dir merupakan home directory,
+//	home directory disalin dengan ~
+
+char * curlyDashToHomeDir(char * dir, char * buf);
+//I.S. dir berisi suatu path
+//F.S. jika buf == NULL, suatu variabel buffer yang statik akan berisi
+//		path yang ~ diganti dengan home directory, dan return
+//	jika buf != NULL, buf berisi dir yang ~ diganti home directory
+//		return buf
+
 #endif

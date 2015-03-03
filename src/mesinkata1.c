@@ -20,12 +20,12 @@ void Ignore_Blank(){
 		ADV();
 	}
 }
-void STARTKATA(char* namafile){
+void STARTKATA(const char* pitaKar){
 /* { I.S. : CC sembarang }
 { F.S. : EndKata = true, dan CC = Mark; }
 {        atau EndKata = false, CKata adalah kata yang sudah diakuisisi,
 		 CC karakter pertama sesudah karakter terakhir kata } */
-	START(namafile);
+	START(pitaKar);
 	status = stat_arg;
 	Ignore_Blank();
 	if (CC == MARK) {
@@ -55,6 +55,9 @@ void SalinKata(){
 { F.S. : CKata berisi kata yang sudah diakuisisi, jika karakternya melebihi
            NMax, sisa "kata" dibuang; CC = BLANK atau CC = MARK; CC adalah
            karakter sesudah karakter terakhir yang diakuisisi } */
+//terdapat dua mode pembacaan kata
+//1. dari tanda kutip hingga tanda kutip
+//2. dari spasi hingga spasi, di tengahnya bisa ada escape sequence (belum diimplementasi)
 	int i = 1;
 	if (CC == '|' || CC == '<' || CC == '>') 
 		status = stat_opr;
