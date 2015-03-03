@@ -56,8 +56,6 @@ void executeOneCommand(int pipeinfd){
 				}
 				StrFromKata(buf,CKata);
 				in = open(buf, O_RDONLY);
-
-				printf("in: %d\n",in);
 			}else if (!strcmp(buf,">")){
 				ADVKATA();
 				if (EndKata){
@@ -66,8 +64,6 @@ void executeOneCommand(int pipeinfd){
 				}
 				StrFromKata(buf,CKata);
 				out = open(buf, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-
-				printf("out: %d\n",out);
 			}else if (!strcmp(buf,"|")){
 				ADVKATA();
 				pipingres = pipe(pipesfd);
