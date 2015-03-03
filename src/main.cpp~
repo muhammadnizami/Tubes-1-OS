@@ -1,9 +1,10 @@
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
+#include <unistd.h>
 
-#include "cd.h"
 #include "eksekusi.h"
+#include "cd.h"
 
 extern "C"{
 	#include "mesinkata1.h"
@@ -13,10 +14,8 @@ extern "C"{
 
 int main(){
 	char curDir[1024];
-	getHomeDir(curDir);
-	if (!cd(curDir,"Documents")){printf("You have no Documents directory\n");};
 	while (true){
-		printDir(curDir);
+		printDir(getwd(curDir));
 		printf("$ ");
 
 		char * argv[MAX_ARGC];
@@ -35,21 +34,14 @@ int main(){
 		
 		if (argc>0)
 		if (!strcmp(argv[0],"cd")){
-			assert(dirExists(curDir));
-			if (!cd(curDir,argv[1]))
+			if (cd(argv[1])==-1)
 				printf("cd: %s: No such file or directory\n",argv[1]);
 		}
 
-		char path[1024];
-		if (argv[0][0]=='.'){
-			strcpy(path,curDir);
-			strcat(path,argv[0]+1);
-		}else	strcpy(path,argv[0]);
-
-		if (isExecutable(path))
-			eksekusi(path,argv);
-		else
-			printf("%s: command not found\n",argv[0]);
+//		if (isExecutable(path))
+//			eksekusi(path,argv);
+//		else
+//			printf("%s: command not found\n",argv[0]);
 
 		//cleanup argv
 		for (int j=0;j<argc;j++) delete argv[j];

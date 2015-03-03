@@ -6,14 +6,11 @@
 bool fileExists(const char * filepath);
 //mengembalikan true bila ada berkas bernama filepath
 
-bool dirExists(const char * dir);
-//mengembalikan true bila ada direktori dir
-
-char * cd(char * from, char * to);
-//I.S. dirExists(from)
-//F.S. from berpindah ke to bila direktori tersebut ada
-//	mengembalikan from bila berhasil
-//	bila tidak, from tetap, return null pointer
+int cd(char * to);
+//I.S. ada working directory
+//F.S. working directory berpindah ke to bila direktori tersebut ada
+//	mengembalikan 0 bila berhasil
+//	bila tidak, working directory tetap, return -1
 
 char * getHomeDir(char * dst);
 //I.S. dst berisi cukup ukuran, atau null

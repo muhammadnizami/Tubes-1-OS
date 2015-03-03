@@ -20,81 +20,20 @@ bool dirExists(const char * dir){
 	}else return false;
 }
 
-void toParent(char * dir){
-	int i = strlen(dir);
-	do{
-		i--;
-	}while (dir[i]!='/');
-	dir[i]='\0';
-}
-
-char * unitcd(char * from, char * to){
-	if(strcmp("..",to)){
-		if (strcmp(".",to)){
-			int a = strlen(from);
-			from[a]='/';
-			strcpy(from+a+1,to);
-			if (dirExists(from))
-				return from;
-			else{
-				from[a]='\0';
-				return NULL;
-			}
-		}
-	}else{
-		toParent(from);
-	}
-}
-
-char * recursivecd(char * from, char * to){
-	if (to[0]=='\0') return from; //basis
-	char next[256];
-	int i=0;
-	while (to[i]!='/' && to[i]!='\0'){
-		next[i]=to[i];
-		i++;
-	}
-	next[i]='\0';
-	if (unitcd(from,next))
-		return recursivecd(from,to+i+1);
-	else
-		return NULL;
-}
-
-char * cd(char * from, char * to){
-//I.S. dirExists(from)
-//F.S. from berpindah ke to bila direktori tersebut ada
-	int a;
-	switch(to[0]){
-	case '/':
-		if(dirExists(to)){
-			strcpy(from, to);
-			return from;
-		}else
-			return NULL;
-	case '~':
-		char tmp[1024];
-		getHomeDir(tmp);
-		a = strlen(tmp);
-		strcpy(tmp+a,to+1);
-		if (dirExists(tmp)){
-			strcpy(from,tmp);
-			return from;
-		}else{
-			return NULL;
-		}
-	default:
-		return recursivecd(from,to);
-/*		a = strlen(from);
-		from[a]='/';
-		strcpy(from+a+1,to);
-		if (dirExists(from))
-			return from;
-		else{
-			from[a]='\0';
-			return NULL;
-		}*/
-	}
+int cd(char * to){
+//I.S. ada working directory
+//F.S. working directory berpindah ke to bila direktori tersebut ada
+//	mengembalikan 0 bila berhasil
+//	bila tidak, working directory tetap, return -1
+	if(to[0]=='~'){
+		char * path;
+		path = new char[1024];
+		getHomeDir(path);
+		strcat(path,to+1);
+		int retval= chdir(path);
+		delete(path);
+		return retval;
+	}else	return chdir(to);
 }
 
 char * getHomeDir(char * dst){
