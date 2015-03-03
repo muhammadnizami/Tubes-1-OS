@@ -8,6 +8,6 @@ void eksekusi(const char * path, char * argv[]);
 //I.S. isExecutable(path)
 //F.S. terbentuk proses anak yang menjalankan path
 
-void eksekusiDenganPipe(const char * path, char * argv, 
+void eksekusi(const char * path, char * argv[], int pid_in, int pid_out);
 
 #endif
