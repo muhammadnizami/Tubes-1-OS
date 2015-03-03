@@ -49,46 +49,76 @@ void ADVKATA(){
 	}
 }
 
+void SalinKata_kutip(int * tabkata_index);
+//menambahkan karakter yang dibaca di antara kutip ke TabKata[tabkata_index] dst
+//tabkata_index sebesar panjang sekarang
+//CC berada pada tanda kutip
+
+void SalinKata_esc(int * tabkata_index);
+//menambahkan karakter yang dibaca setelah '\' ke TabKata[tabkata_index] dst
+//tabkata_index sebesar panjang sekarang
+//CC berada pada karakter terakhir yang terpengaruh escape sequence
+//escape sequence yang ditangani: \",\\,\<,\|,\ ,
+
 void SalinKata(){
 /* { Mengakuisisi kata, menyimpan dalam CKata }
 { I.S. : CC adalah karakter pertama dari kata }
 { F.S. : CKata berisi kata yang sudah diakuisisi, jika karakternya melebihi
            NMax, sisa "kata" dibuang; CC = BLANK atau CC = MARK; CC adalah
            karakter sesudah karakter terakhir yang diakuisisi } */
-//terdapat dua mode pembacaan kata
+//terdapat dua status khusus pembacaan kata
 //1. dari tanda kutip hingga tanda kutip
-//2. dari spasi hingga spasi, di tengahnya bisa ada escape sequence (belum diimplementasi)
+//2. escape sequence (belum diimplementasi)
 	int i = 1;
 	if (CC == '|' || CC == '<' || CC == '>') 
 		status = stat_opr;
 	else	status = stat_arg;
 	
-	if (CC!='\"'){
-		for(;;) {
+	for(;;) {
+		switch(CC){
+		case '\\':
+			SalinKata_esc(&i);
+			break;
+		case '\"':
+			SalinKata_kutip(&i);
+			break;
+		default:
 			CKata.TabKata[i] = CC;
-			ADV();
-			if (CC=='\\'){
-				//implementasikan bagian escape sequence di sini
-			}
-			if (status == stat_arg && (CC == '|' || CC == '<' || CC == '>') ){
-				break;
-			} else if (status == stat_opr && !(CC == '|' || CC == '<' || CC == '>') ){
-				break;
-			} else if((CC == MARK) || (CC == BLANK) || (CC == '\n')){
-				break;
-			} else {
-				i++;
-			}
-		}	
-		CKata.Length = i;
-	}else{
-		for(ADV();CC!='\"';ADV()) {
-			CKata.TabKata[i] = CC;
-			i++;
 		}
 		ADV();
-		CKata.Length=i-1;
+		if (status == stat_arg && (CC == '|' || CC == '<' || CC == '>') ){
+			break;
+		} else if (status == stat_opr && !(CC == '|' || CC == '<' || CC == '>') ){
+			break;
+		} else if((CC == MARK) || (CC == BLANK) || (CC == '\n')){
+			break;
+		} else {
+			i++;
+		}
+	}	
+	CKata.Length = i;
+}
+
+void SalinKata_esc(int * tabkata_index){
+	//implementasikan escape sequence di sini
+	ADV();
+	switch(CC){
+	
+	//gunakan case untuk yang lain
+
+	default:	//termasuk \",\\,\<,\ ,\|
+			//escape sequence yang belum diimplementasikan akan dianggap huruf biasa
+		CKata.TabKata[*tabkata_index] = CC;
 	}
+}
+
+void SalinKata_kutip(int * tabkata_index){
+	bool tambahanbaris = false;
+	for(ADV();CC!='\"';ADV()) {
+		CKata.TabKata[*tabkata_index] = CC;
+		(*tabkata_index)++;
+	}
+	(*tabkata_index)--;
 }
 
 /* { ***** Operasi Lain ***** } */
