@@ -32,18 +32,20 @@ int main(){
 			printf(" %s",argv[i]);
 		printf("\n");
 		
-		if (argc>1)
-		if (!strcmp(argv[0],"cd")){
-			if (cd(argv[1])==-1)
-				printf("cd: %s: No such file or directory\n",argv[1]);
+		if (argc>0){
+			if (!strcmp(argv[0],"cd" && argv[1]!=NULL)){
+				if (cd(argv[1])==-1)
+					printf("cd: %s: No such file or directory\n",argv[1]);
+			}
+		
+
+	//		if (isExecutable(path))
+	//			eksekusi(path,argv);
+	//		else
+	//			printf("%s: command not found\n",argv[0]);
+
+			//cleanup argv
 		}
-
-//		if (isExecutable(path))
-//			eksekusi(path,argv);
-//		else
-//			printf("%s: command not found\n",argv[0]);
-
-		//cleanup argv
 		for (int j=0;j<argc;j++) delete argv[j];
 	}
 }
