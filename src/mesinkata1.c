@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdbool.h>
+
+#include <readline/readline.h>
 #include "mesinkata1.h"
 
 /* { ***** Mesin lain yang dipakai ***** } */
@@ -117,6 +119,8 @@ void SalinKata_kutip(int * tabkata_index){
 	for(ADV();CC!='\"';ADV()) {
 		CKata.TabKata[*tabkata_index] = CC;
 		(*tabkata_index)++;
+		if (CC=='\0')
+			break;
 	}
 	(*tabkata_index)--;
 }
