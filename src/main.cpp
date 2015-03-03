@@ -20,7 +20,9 @@ int main(){
 
 		char * argv[MAX_ARGC];
 		int argc=0;
-		for (STARTKATA("-");!EndKata;ADVKATA()){
+		if (status==stat_opr) ADVKATA();//dummy sementara.
+						//operator redirect dan pipeline belum dikerjakan
+		for (STARTKATA("-");!EndKata && status == stat_arg;ADVKATA()){
 			argv[argc] = new char[CKata.Length+1];
 			StrFromKata(argv[argc],CKata);
 			argc++;

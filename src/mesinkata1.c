@@ -56,23 +56,36 @@ void SalinKata(){
            NMax, sisa "kata" dibuang; CC = BLANK atau CC = MARK; CC adalah
            karakter sesudah karakter terakhir yang diakuisisi } */
 	int i = 1;
-	for(;;) {
-		CKata.TabKata[i] = CC;
-		ADV();
-		if (status == stat_arg && (CC == '|' || CC == '<' || CC == '>') ){
-			status = stat_opr;
-			break;
-		} else if (status == stat_opr && !(CC == '|' || CC == '<' || CC == '>') ){
-			status = stat_arg;
-			break;
-		} else if((CC == MARK) || (CC == BLANK) || (CC == '\n')){
-			if (status == stat_opr) status = stat_arg;
-			break;
-		} else {
+	if (CC == '|' || CC == '<' || CC == '>') 
+		status = stat_opr;
+	else	status = stat_arg;
+	
+	if (CC!='\"'){
+		for(;;) {
+			CKata.TabKata[i] = CC;
+			ADV();
+			if (CC=='\\'){
+				//implementasikan bagian escape sequence di sini
+			}
+			if (status == stat_arg && (CC == '|' || CC == '<' || CC == '>') ){
+				break;
+			} else if (status == stat_opr && !(CC == '|' || CC == '<' || CC == '>') ){
+				break;
+			} else if((CC == MARK) || (CC == BLANK) || (CC == '\n')){
+				break;
+			} else {
+				i++;
+			}
+		}	
+		CKata.Length = i;
+	}else{
+		for(ADV();CC!='\"';ADV()) {
+			CKata.TabKata[i] = CC;
 			i++;
 		}
+		ADV();
+		CKata.Length=i;
 	}
-	CKata.Length = i;
 }
 
 /* { ***** Operasi Lain ***** } */

@@ -39,6 +39,9 @@ void STARTKATA(char* namafile);
 { F.S. : EndKata = true, dan CC = Mark; }
 {        atau EndKata = false, CKata adalah kata yang sudah diakuisisi,
 		 CC karakter pertama sesudah karakter terakhir kata } */
+//terdapat dua mode pembacaan kata
+//1. dari tanda kutip hingga tanda kutip
+//2. dari spasi hingga spasi, di tengahnya bisa ada escape sequence (belum diimplementasi)
 		 
 void ADVKATA();
 /* { I.S. : EndKata = false; CC adalah karakter sesudah karakter terakhir
