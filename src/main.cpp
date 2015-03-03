@@ -18,20 +18,22 @@ extern "C"{
 
 #define MAX_ARGC 32
 
-void executeOneCommand();
+void executeOneCommand(int pipeinfd);
 
 int main(){
 	while (true){
-		executeOneCommand();
+		char curDir[1024];
+		printDir(getwd(curDir));
+		printf("$ ");
+		executeOneCommand(0);
 	}
 }
 
-void executeOneCommand(){
-	char curDir[1024];
-	printDir(getwd(curDir));
-	printf("$ ");
+void executeOneCommand(int pipeinfd){
+	int pipingres = -1;
+	int pipesfd[2];
 
-	int in=0;
+	int in=pipeinfd;
 	int out=1;
 
 	char * argv[MAX_ARGC];
@@ -66,6 +68,14 @@ void executeOneCommand(){
 				out = open(buf, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 
 				printf("out: %d\n",out);
+			}else if (!strcmp(buf,"|")){
+				ADVKATA();
+				pipingres = pipe(pipesfd);
+				if (pipingres==-1)
+					printf("pipe failed\n");
+				else
+					out = pipesfd[1];
+				break;
 			}else break;
 		}
 	}
@@ -81,9 +91,8 @@ void executeOneCommand(){
 			if (cd(argv[1])==-1)
 				printf("cd: %s: No such file or directory\n",argv[1]);
 		}else	eksekusi(argv[0],argv,in,out);
-
-	
+		//cleanup argv
+		for (int j=0;j<argc;j++) delete argv[j];
+		if (pipingres!=-1)executeOneCommand(pipesfd[0]);
 	}
-	//cleanup argv
-	for (int j=0;j<argc;j++) delete argv[j];
 }
