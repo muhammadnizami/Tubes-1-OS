@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <unistd.h>
 
+//untuk redirect
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 #include "eksekusi.h"
 #include "cd.h"
 
@@ -12,37 +18,72 @@ extern "C"{
 
 #define MAX_ARGC 32
 
-int main(){
-	char curDir[1024];
-	while (true){
-		printDir(getwd(curDir));
-		printf("$ ");
+void executeOneCommand();
 
-		char * argv[MAX_ARGC];
-		int argc=0;
-		if (status==stat_opr) ADVKATA();//dummy sementara.
-						//operator redirect dan pipeline belum dikerjakan
-		for (STARTKATA("-");!EndKata && status == stat_arg;ADVKATA()){
+int main(){
+	while (true){
+		executeOneCommand();
+	}
+}
+
+void executeOneCommand(){
+	char curDir[1024];
+	printDir(getwd(curDir));
+	printf("$ ");
+
+	int in=0;
+	int out=1;
+
+	char * argv[MAX_ARGC];
+	int argc=0;
+	if (status==stat_opr) ADVKATA();//dummy sementara.
+					//operator redirect dan pipeline belum dikerjakan
+	for (STARTKATA("-");!EndKata;ADVKATA()){
+		if ( status == stat_arg ){
 			argv[argc] = new char[CKata.Length+1];
 			StrFromKata(argv[argc],CKata);
 			argc++;
-		}
-		argv[argc]=NULL;
-		printf ("executing");
+		} else{
+			char buf[1024];
+			StrFromKata(buf,CKata);
+			if (!strcmp(buf,"<")){
+				ADVKATA();
+				if (EndKata){
+					printf("syntax error near unexpected token `newline'\n");
+					break;
+				}
+				StrFromKata(buf,CKata);
+				in = open(buf, O_RDONLY);
 
-		for (int i=0;i<argc;i++)
-			printf(" %s",argv[i]);
-		printf("\n");
-		
-		if (argc>0){
-			if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
-				if (cd(argv[1])==-1)
-					printf("cd: %s: No such file or directory\n",argv[1]);
-			}else	eksekusi(argv[0],argv);
-		
-			
+				printf("in: %d\n",in);
+			}else if (!strcmp(buf,">")){
+				ADVKATA();
+				if (EndKata){
+					printf("syntax error near unexpected token `newline'\n");
+					break;
+				}
+				StrFromKata(buf,CKata);
+				out = open(buf, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+
+				printf("out: %d\n",out);
+			}else break;
 		}
-		//cleanup argv
-		for (int j=0;j<argc;j++) delete argv[j];
 	}
+	argv[argc]=NULL;
+	printf ("executing");
+
+	for (int i=0;i<argc;i++)
+		printf(" %s",argv[i]);
+	printf("\n");
+
+	if (argc>0){
+		if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
+			if (cd(argv[1])==-1)
+				printf("cd: %s: No such file or directory\n",argv[1]);
+		}else	eksekusi(argv[0],argv,in,out);
+
+	
+	}
+	//cleanup argv
+	for (int j=0;j<argc;j++) delete argv[j];
 }

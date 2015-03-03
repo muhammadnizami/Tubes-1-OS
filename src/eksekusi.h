@@ -8,4 +8,9 @@ void eksekusi(const char * path, char * argv[]);
 //I.S. isExecutable(path)
 //F.S. terbentuk proses anak yang menjalankan path
 
+void eksekusi(const char * path, char * argv[], int pid_in, int pid_out);
+//I.S. isExecutable(path)
+//F.S. terbentuk proses anak yang menjalankan path
+//	dengan stdin dan stdout diredirect ke pid_in dan pid_out
+
 #endif
