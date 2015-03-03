@@ -83,7 +83,8 @@ void SalinKata(){
 			CKata.TabKata[i] = CC;
 			i++;
 		}
-		CKata.Length=i;
+		ADV();
+		CKata.Length=i-1;
 	}
 }
 

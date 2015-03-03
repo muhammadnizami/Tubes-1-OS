@@ -84,7 +84,7 @@ void SalinKata(){
 			i++;
 		}
 		ADV();
-		CKata.Length=i;
+		CKata.Length=i-1;
 	}
 }
 
