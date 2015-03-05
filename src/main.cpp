@@ -24,8 +24,11 @@ extern "C"{
 
 void executeOneCommand(const char * cmd, int pipeinfd);
 
+bool stillExec = true;
+
 int main(){
-	while (true){
+	printf("Selamat Pagi, Pak Dody\n");
+	do{
 		char curDir[1024];
 		char * input;
 
@@ -36,7 +39,7 @@ int main(){
 		add_history(input);
 
 		free(input);
-	}
+	}while (stillExec);
 }
 
 void executeOneCommand(const char * cmd, int pipeinfd){
@@ -87,7 +90,10 @@ void executeOneCommand(const char * cmd, int pipeinfd){
 	argv[argc]=NULL;
 
 	if (argc>0){
-		if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
+		if (!strcmp(argv[0],"DodyILoveYou")){ //keluar dari program
+			printf("terima kasih untuk hari ini Pak, kami keluar dulu\n");
+			stillExec=false;
+		}else if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
 			if (cd(argv[1])==-1)
 				printf("cd: %s: No such file or directory\n",argv[1]);
 		}else	eksekusi(argv[0],argv,in,out);
