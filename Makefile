@@ -3,10 +3,10 @@ all: bin/testprogram bin/myShell
 bin/testprogram: obj/testprogram.o bin
 	g++ -o bin/testprogram obj/testprogram.o
 
-bin/myShell: obj/main.o obj/mesinkar1.o obj/mesinkata1.o obj/cd.o obj/eksekusi.o bin
-	g++ -o bin/myShell obj/main.o obj/mesinkar1.o obj/mesinkata1.o obj/cd.o obj/eksekusi.o
+bin/myShell: obj/main.o obj/mesinkar1.o obj/mesinkata1.o obj/cd.o obj/eksekusi.o obj/help.o bin 
+	g++ -o bin/myShell obj/main.o obj/mesinkar1.o obj/mesinkata1.o obj/cd.o obj/eksekusi.o obj/help.o -lreadline
 
-obj/main.o: src/main.cpp src/cd.h src/mesinkata1.h src/eksekusi.h obj
+obj/main.o: src/main.cpp src/cd.h src/mesinkata1.h src/eksekusi.h src/help.h obj
 	g++ -o obj/main.o -c src/main.cpp
 
 obj/mesinkar1.o: src/mesinkar1.c src/mesinkar1.h obj
@@ -23,6 +23,9 @@ obj/testprogram.o: src/testprogram.cpp obj
 
 obj/eksekusi.o: src/eksekusi.cpp src/eksekusi.h obj
 	g++ -o obj/eksekusi.o -c src/eksekusi.cpp
+
+obj/help.o: src/help.cpp src/help.h
+	g++ -o obj/help.o -c src/help.cpp
 
 bin:
 	mkdir bin

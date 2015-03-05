@@ -15,6 +15,7 @@
 
 #include "eksekusi.h"
 #include "cd.h"
+#include "help.h"
 
 extern "C"{
 	#include "mesinkata1.h"
@@ -93,7 +94,9 @@ void executeOneCommand(const char * cmd, int pipeinfd){
 		if (!strcmp(argv[0],"DodyILoveYou")){ //keluar dari program
 			printf("terima kasih untuk hari ini Pak, kami keluar dulu\n");
 			stillExec=false;
-		}else if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
+		}else if (!strcmp(argv[0],"?")||!strcmp(argv[0],"help"))
+			displayHelp();
+		else if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
 			if (cd(argv[1])==-1)
 				printf("cd: %s: No such file or directory\n",argv[1]);
 		}else	eksekusi(argv[0],argv,in,out);
