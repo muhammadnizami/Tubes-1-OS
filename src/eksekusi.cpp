@@ -17,6 +17,7 @@ void eksekusi(const char * path, char * argv[]){
 	pid=fork();
 	if (pid==0){	
 		execvp(path,argv);
+		fprintf(stderr,"%s: command not found\n",path);
 	}else {
 		assert(pid>0);
 		waitpid(pid, &status, WUNTRACED
@@ -52,6 +53,9 @@ void eksekusi(const char * path, char * argv[], int in, int out){
 
 		//override proses
 		execvp(path,argv);
+
+		//bila gagal override
+		fprintf(stderr,"%s: program not found\n",path);
 	}else {
 		assert(pid>0);
 		waitpid(pid, &status, WUNTRACED
