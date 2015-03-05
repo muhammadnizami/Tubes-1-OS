@@ -100,7 +100,7 @@ void executeOneCommand(const char * cmd, int pipeinfd){
 		else if (!strcmp(argv[0],"cd") && argv[1]!=NULL){
 			if (cd(argv[1])==-1)
 				printf("cd: %s: No such file or directory\n",argv[1]);
-		}else	eksekusi(argv[0],argv,in,out);
+		}else	eksekusi(argv[0],argv,in,out,pipingres==-1);
 		//cleanup argv
 		for (int j=0;j<argc;j++) delete argv[j];
 		if (pipingres!=-1)executeOneCommand(cmd+mesinkar_i,pipesfd[0]);

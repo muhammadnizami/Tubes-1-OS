@@ -49,10 +49,11 @@ void eksekusi(const char * path, char * argv[]){
 	}
 }
 
-void eksekusi(const char * path, char * argv[], int in, int out){
+void eksekusi(const char * path, char * argv[], int in, int out, bool bergantian){
 //I.S. isExecutable(path)
 //F.S. terbentuk proses anak yang menjalankan path
 //	dengan stdin dan stdout diredirect ke pid_in dan pid_out
+//	bila bergantian false, proses anak dilakukan bersama proses induk
 	pid_t pid;
 	int status;
 	pid=fork();
@@ -86,7 +87,8 @@ void eksekusi(const char * path, char * argv[], int in, int out){
 		signal(SIGINT, pass_to_child);
 		signal(SIGTERM, pass_to_child);
 
-		waitpid(pid, &status, WUNTRACED
+		if (bergantian)
+			waitpid(pid, &status, WUNTRACED
 #ifdef WCONTINUED       /* Not all implementations support this */
         | WCONTINUED
 #endif

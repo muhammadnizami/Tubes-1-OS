@@ -8,9 +8,10 @@ void eksekusi(const char * path, char * argv[]);
 //I.S. isExecutable(path)
 //F.S. terbentuk proses anak yang menjalankan path
 
-void eksekusi(const char * path, char * argv[], int pid_in, int pid_out);
+void eksekusi(const char * path, char * argv[], int in, int out, bool bergantian);
 //I.S. isExecutable(path)
 //F.S. terbentuk proses anak yang menjalankan path
 //	dengan stdin dan stdout diredirect ke pid_in dan pid_out
+//	bila bergantian false, proses anak dilakukan bersama proses induk
 
 #endif
