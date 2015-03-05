@@ -6,7 +6,7 @@
 
 bool isExecutable(const char * path){
 //mengembalikan true bila path menunjuk berkas eksekutabel
-	return access("/my/file", X_OK) != -1;
+	return access(path, X_OK) != -1;
 }
 
 void eksekusi(const char * path, char * argv[]){
